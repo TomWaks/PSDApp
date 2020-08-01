@@ -3,7 +3,9 @@ package com.tomwaks.psdapp;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -49,15 +52,18 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout ll_main, ll_global;
     ProgressBar pb_global;
     TextView tv_search, tv_root;
-    ImageView iv_refresh;
+    ImageView iv_refresh, iv_close;
+    EditText et_search;
 
-    String URL = "", IP, API, PATH = "/";
+    String URL = "", IP, API, PATH = "/", LAST_PHRASE="", CURRENT_PHRASE="";
+    Boolean STATUS_SEARCH = false;
 
     List<String> objects = new ArrayList<String>(); // folders and files
     List<Integer> type_objects = new ArrayList<Integer>(); // 1=folder and 0=file
     List<String> size_objects = new ArrayList<String>(); // size of file or -1 for folder
     List<String> date_objects = new ArrayList<String>(); // date of file or date of folder
     List<Integer> numbs_objects = new ArrayList<Integer>(); // numbers of files and folder in main folder or -1 for files
+    List<String> path_objects = new ArrayList<String>(); // path
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +82,18 @@ public class MainActivity extends AppCompatActivity {
         drawer_layout = findViewById(R.id.drawer_layout);
 
         iv_refresh = findViewById(R.id.iv_refresh);
-//        iv_refresh.setOnClickListener(f_refresh);
+        iv_refresh.setOnClickListener(f_refresh);
+
+        iv_close = findViewById(R.id.iv_close_search);
+        iv_close.setOnClickListener(f_close_search);
 
         tv_search = findViewById(R.id.tv_search);
+        tv_search.setOnClickListener(f_search);
+
         tv_root = findViewById(R.id.tv_root);
-//        tv_search.setOnClickListener(f_refresh);
+
+        et_search = findViewById(R.id.et_search);
+        et_search.addTextChangedListener(f_et_search);
 
 
         ll_global = findViewById(R.id.ll_global);
@@ -343,6 +356,179 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    TextWatcher f_et_search = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            CURRENT_PHRASE = et_search.getText().toString();
+            ll_main.removeAllViews();
+            if(!STATUS_SEARCH) {
+                STATUS_SEARCH = true;
+                new SearchObjectListing().execute();
+            }
+//            ConstraintLayout ll_info = (ConstraintLayout) View.inflate(SearchActivity.this, R.layout.ll_info, null);
+//            TextView tv_info = ll_info.findViewById(R.id.tv_info);
+//            tv_info.setText("Trwa przeszukiwanie\nwedług frazy '"+current_word+"'");
+//            ll_main.addView(ll_info);
+//            if(!status_search){
+//                status_search = true;
+//                new SearchObjectListing().execute("http://"+ IP +"/search.php?key_api="+ API +"&&dir=/var/www/private_space/&&word="+current_word, current_word);
+//            }
+
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+        }
+    };
+
+    private class SearchObjectListing extends AsyncTask<String, Integer, String> {
+
+        OkHttpClient client = new OkHttpClient();
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            objects.clear();
+            type_objects.clear();
+            path_objects.clear();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                LAST_PHRASE = CURRENT_PHRASE;
+                String search_url = ("http://"+ IP +"/search.php?key_api="+ API +"&&phrase="+CURRENT_PHRASE).replaceAll(" ", "%20");
+                Response response = client.newCall(new Request.Builder()
+                        .url(search_url)
+                        .build()).execute();
+                if (!response.isSuccessful()) {
+                    Log.d("executed-url-result", "null");
+                    return null;
+                }
+
+                Log.d("URLURLURL", search_url);
+                JSONObject jA = new JSONObject(response.body().string());
+                JSONArray jData = new JSONArray(jA.get("data").toString());
+
+                if(jA.get("status").equals(1)){
+                    for(int i=0; i < jData.length(); i++){
+                        Log.d("status--", jA.get("counter").toString());
+                        objects.add(jData.getJSONObject(i).getString("name_object"));
+                        type_objects.add(jData.getJSONObject(i).getInt("type_object"));
+                        path_objects.add(jData.getJSONObject(i).getString("path_object"));
+                    }
+                    return "1";
+                }else{
+                    return "0";
+                }
+            } catch (UnknownHostException e) {
+                Log.d("status--ConnectExcep", e.toString());
+                return "-1";
+            } catch (ConnectException | SocketTimeoutException e){
+                Log.d("status--ConnectExcep", e.toString());
+                return "-2";
+            } catch (IllegalArgumentException e){
+                Log.d("status--ConnectExcep", e.toString());
+                return "-3";
+            } catch (Exception e){
+                Log.d("status--ConnectExcep", e.toString());
+                return "-4";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            Log.d("qwertyuiop", result);
+            if(result.equals("1")) {
+                ll_main.removeAllViews();
+
+                if(objects.size() == 0){
+                    ll_main.removeAllViews();
+                    ConstraintLayout ll_info = (ConstraintLayout) View.inflate(MainActivity.this, R.layout.ll_search_info, null);
+                    TextView tv_info = ll_info.findViewById(R.id.tv_info);
+                    tv_info.setText("Brak wyników.");
+                    ll_main.addView(ll_info);
+                }
+//
+                for (int i = 0; i < objects.size(); i++) {
+                    if (type_objects.get(i) == 1) {
+                        ConstraintLayout ll_object = (ConstraintLayout) View.inflate(MainActivity.this, R.layout.ll_object, null);
+                        ImageView iv_icon_object = ll_object.findViewById(R.id.iv_icon_object);
+                        iv_icon_object.setImageResource(R.drawable.ic_folder);
+                        ImageView iv_icon_action = ll_object.findViewById(R.id.iv_icon_action);
+                        iv_icon_action.setImageResource(R.drawable.ic_more);
+                        TextView tv_name_object = ll_object.findViewById(R.id.tv_name_object);
+                        tv_name_object.setText(objects.get(i));
+                        TextView tv_date_object = ll_object.findViewById(R.id.tv_date_object);
+                        tv_date_object.setText("Lokalizacja: " + path_objects.get(i));
+                        ll_main.addView(ll_object);
+                    }else{
+                        ConstraintLayout ll_object = (ConstraintLayout) View.inflate(MainActivity.this, R.layout.ll_object, null);
+                        ImageView iv_icon_object = ll_object.findViewById(R.id.iv_icon_object);
+                        iv_icon_object.setImageResource(R.drawable.ic_file);
+                        ImageView iv_icon_action = ll_object.findViewById(R.id.iv_icon_action);
+                        iv_icon_action.setImageResource(R.drawable.ic_more);
+                        TextView tv_name_object = ll_object.findViewById(R.id.tv_name_object);
+                        tv_name_object.setText(objects.get(i));
+                        TextView tv_date_object = ll_object.findViewById(R.id.tv_date_object);
+                        tv_date_object.setText("Lokalizacja: " + path_objects.get(i));
+                        ll_main.addView(ll_object);
+                    }
+                }
+            }
+//
+//            if(result.equals("0")){
+//                ll_main.removeAllViews();
+//                ConstraintLayout ll_info = (ConstraintLayout) View.inflate(SearchActivity.this, R.layout.ll_info, null);
+//                TextView tv_info = ll_info.findViewById(R.id.tv_info);
+//                tv_info.setText("Błąd po stronie serwera");
+//                ll_main.addView(ll_info);
+//            }
+//
+//            if(result.equals("-1")){
+//                ll_main.removeAllViews();
+//                ConstraintLayout ll_info = (ConstraintLayout) View.inflate(SearchActivity.this, R.layout.ll_info, null);
+//                TextView tv_info = ll_info.findViewById(R.id.tv_info);
+//                tv_info.setText("Podaj poprawne IP serwera");
+//                ll_main.addView(ll_info);
+//            }
+//
+//            if(result.equals("-2")){
+//                ll_main.removeAllViews();
+//                ConstraintLayout ll_info = (ConstraintLayout) View.inflate(SearchActivity.this, R.layout.ll_info, null);
+//                TextView tv_info = ll_info.findViewById(R.id.tv_info);
+//                tv_info.setText("Nie udało się połączyć z serwerem");
+//                ll_main.addView(ll_info);
+//            }
+//
+//            if(result.equals("-3")){
+//                ll_main.removeAllViews();
+//                ConstraintLayout ll_info = (ConstraintLayout) View.inflate(SearchActivity.this, R.layout.ll_info, null);
+//                TextView tv_info = ll_info.findViewById(R.id.tv_info);
+//                tv_info.setText("Format URL jest nieprawidłowy");
+//                ll_main.addView(ll_info);
+//            }
+//
+//            iv_refresh.setEnabled(true);
+//            status_search = false;
+//
+            STATUS_SEARCH = false;
+            if(!LAST_PHRASE.equals(CURRENT_PHRASE)){
+                STATUS_SEARCH = true;
+                new SearchObjectListing().execute();
+            }
+
+        }
+    }
+
     @Override
     public void onBackPressed() {
         if(!PATH.equals("/")){
@@ -354,7 +540,6 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 tv_search.setVisibility(View.GONE);
                 tv_root.setVisibility(View.VISIBLE);
-                Log.d("ppp", path[path.length-2]);
                 tv_root.setText(path[path.length-2]);
             }
             new ObjectsListing().execute();
@@ -374,6 +559,37 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener f_nav = new View.OnClickListener() {
         public void onClick(View v) {
             drawer_layout.openDrawer(Gravity.LEFT);
+        }
+    };
+
+    View.OnClickListener f_search = new View.OnClickListener() {
+        public void onClick(View v) {
+            et_search.setVisibility(View.VISIBLE);
+            iv_close.setVisibility(View.VISIBLE);
+            tv_search.setVisibility(View.GONE);
+            tv_root.setVisibility(View.GONE);
+            iv_refresh.setVisibility(View.GONE);
+            tv_root.setVisibility(View.GONE);
+            ll_main.removeAllViews();
+        }
+    };
+
+    View.OnClickListener f_close_search = new View.OnClickListener() {
+        public void onClick(View v) {
+            tv_search.setVisibility(View.VISIBLE);
+            tv_root.setVisibility(View.VISIBLE);
+            iv_refresh.setVisibility(View.VISIBLE);
+            et_search.setVisibility(View.GONE);
+            iv_close.setVisibility(View.GONE);
+            tv_root.setVisibility(View.GONE);
+            PATH = "/";
+            new ObjectsListing().execute();
+        }
+    };
+
+    View.OnClickListener f_refresh = new View.OnClickListener() {
+        public void onClick(View v) {
+            Log.d("assadsdadsa", "1234567890");
         }
     };
 

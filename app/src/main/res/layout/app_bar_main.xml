@@ -79,6 +79,22 @@
                     app:layout_constraintStart_toEndOf="@+id/iv_nav"
                     app:layout_constraintTop_toTopOf="parent" />
 
+
+                <EditText
+                    android:id="@+id/et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:hint="Zacznij pisać ..."
+                    android:background="@drawable/et_style_border"
+                    android:padding="10dp"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorWhite2"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/iv_nav"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/iv_refresh"
                     android:layout_width="wrap_content"
@@ -90,6 +106,19 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_refresh" />
+
+                <ImageView
+                    android:id="@+id/iv_close_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_close" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -2,8 +2,16 @@
     <string name="app_name">PSDApp</string>
     <string name="title_login_activity">PRIVATE SPACE DRIVE APPLICATION</string>
     <string name="ip_server_edittext">Enter IP server</string>
-    <string name="api_key_edittext">Enter key APIr</string>
+    <string name="api_key_edittext">Enter key API</string>
     <string name="text_checkbox">Save your authorization data</string>
     <string name="connect_login">CONNECT</string>
     <string name="footer">© 2020 Tomasz Waksmundzki</string>
+    <string name="error_login">Fill all fields!</string>
+    <string name="error_login_type_m1">No access!</string>
+    <string name="error_login_type_0">Wrong key API!</string>
+    <string name="error_login_type_2">Unknown host: /</string>
+    <string name="error_login_type_3">Failed to connect to /</string>
+    <string name="error_login_type_4">Invalid URL: /</string>
+    <string name="error_login_type_5">Undefine error!</string>
+    <string name="error_login_type_6">Connection error!</string>
 </resources>

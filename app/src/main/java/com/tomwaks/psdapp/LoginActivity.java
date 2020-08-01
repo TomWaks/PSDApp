@@ -124,9 +124,6 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("status--ConnectExcep", e.toString());
                 return "5"+e.toString();
             }
-//            catch (Exception e){
-//                return e.toString();
-//            }
         }
 
 

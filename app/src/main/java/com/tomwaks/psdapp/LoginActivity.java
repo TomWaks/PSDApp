@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -59,6 +62,13 @@ public class LoginActivity extends AppCompatActivity {
 
         et_ip_server.setText(IP);
         et_api_key.setText(API);
+
+        RotateAnimation rotate = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setRepeatCount(Animation.INFINITE);
+        rotate.setDuration(3000);
+        rotate.setInterpolator(new LinearInterpolator());
+        ImageView iv_logo = (ImageView) findViewById(R.id.iv_logo);
+        iv_logo.startAnimation(rotate);
     }
 
     View.OnClickListener f_connect = new View.OnClickListener() {

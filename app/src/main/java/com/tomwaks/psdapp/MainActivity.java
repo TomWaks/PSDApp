@@ -44,14 +44,15 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawer_layout;
+    ConstraintLayout cl_main, cl_search, cl_more;
     LinearLayout ll_main, ll_global, ll_no_objects;
     ProgressBar pb_global, pb_storage;
     TextView tv_search, tv_root, tv_storage, tv_info;
-    ImageView iv_refresh, iv_close, iv_back, iv_nav;
+    ImageView iv_refresh, iv_refresh_more, iv_close, iv_back, iv_nav;
     EditText et_search;
 
     String URL = "", IP, API, PATH = "/", LAST_PHRASE="", CURRENT_PHRASE="";
-    Boolean STATUS_SEARCH = false, SEARCH_ACTIVE = false;
+    Boolean STATUS_SEARCH = false, SEARCH_ACTIVE = false, ENABLE_BACK_BUTTON = true;
     int INDEX_OBJECT;
     long STORAGE_USED = 0;
     long STORAGE_FREE = 0;
@@ -71,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
         IP =  getIntent().getStringExtra("IP");
         API =  getIntent().getStringExtra("API");
 
+        cl_main = findViewById(R.id.cl_main);
+        cl_search = findViewById(R.id.cl_search);
+        cl_more = findViewById(R.id.cl_more);
+
+
         ImageView iv_logo = findViewById(R.id.iv_logo);
         AnimationImage(iv_logo);
 
@@ -83,13 +89,15 @@ public class MainActivity extends AppCompatActivity {
         tv_info = findViewById(R.id.tv_info);
 
         iv_refresh = findViewById(R.id.iv_refresh);
+        iv_refresh_more = findViewById(R.id.iv_refresh_more);
         iv_refresh.setOnClickListener(f_refresh);
+        iv_refresh_more.setOnClickListener(f_refresh);
 
         iv_close = findViewById(R.id.iv_close_search);
         iv_close.setOnClickListener(f_close_search);
 //
-//        iv_back = findViewById(R.id.iv_back);
-//        iv_back.setOnClickListener(f_close_search);
+        iv_back = findViewById(R.id.iv_back);
+        iv_back.setOnClickListener(f_back);
 //
 ////        iv_back = findViewById(R.id.iv_back);
 //        iv_back.setOnClickListener(f_close_search);
@@ -126,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            ENABLE_BACK_BUTTON = false;
             iv_refresh.setEnabled(false);
             tv_search.setEnabled(false);
             ll_main.removeAllViews();
@@ -149,6 +158,12 @@ public class MainActivity extends AppCompatActivity {
                     return "5";
                 }
 
+
+                Log.d("123123123", objects.toString());
+                Log.d("123123123", type_objects.toString());
+                Log.d("123123123", size_objects.toString());
+                Log.d("123123123", date_objects.toString());
+                Log.d("123123123", numbs_objects.toString());
                 JSONObject jA = new JSONObject(response.body().string());
                 JSONArray jData = new JSONArray(jA.get("data").toString());
 
@@ -160,6 +175,12 @@ public class MainActivity extends AppCompatActivity {
                         date_objects.add(jData.getJSONObject(i).getString("date_object"));
                         numbs_objects.add(jData.getJSONObject(i).getInt("numb_of_objects"));
                     }
+
+                    Log.d("123123123", objects.toString());
+                    Log.d("123123123", type_objects.toString());
+                    Log.d("123123123", size_objects.toString());
+                    Log.d("123123123", date_objects.toString());
+                    Log.d("123123123", numbs_objects.toString());
                     return "1";
                 }else{
                     return "0";
@@ -182,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             Log.d("result--", result);
+            Log.d("result--", objects.size() +"");
 
 
             ll_no_objects.setVisibility(View.GONE);
@@ -206,20 +228,12 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 PATH += objects.get(index) + "/";
-                                tv_search.setVisibility(View.GONE);
-                                tv_root.setVisibility(View.VISIBLE);
-                                iv_nav.setVisibility(View.GONE);
-                                iv_back.setVisibility(View.VISIBLE);
+                                cl_more.setVisibility(View.VISIBLE);
+                                cl_main.setVisibility(View.GONE);
+                                cl_main.setVisibility(View.GONE);
+
                                 tv_root.setText(objects.get(index));
                                 new ObjectsListing().execute();
-//                                Intent intent_main_activity = new Intent(MainActivity.this, ListingActivity.class);
-//                                Log.d("status--", last_URL+objects.get(index) + "/");
-//                                intent_main_activity.putExtra("URL", last_URL+objects.get(index) + "/");
-//                                intent_main_activity.putExtra("IP", IP);
-//                                intent_main_activity.putExtra("API", API);
-//                                intent_main_activity.putExtra("DIR", objects.get(index));
-//                                intent_main_activity.putExtra("FIRST_DIR", objects.get(index));
-//                                MainActivity.this.startActivity(intent_main_activity);
                             }
                         });
 
@@ -383,6 +397,7 @@ public class MainActivity extends AppCompatActivity {
             pb_global.setVisibility(View.GONE);
             iv_refresh.setEnabled(true);
             tv_search.setEnabled(true);
+            ENABLE_BACK_BUTTON = true;
 
         }
     }
@@ -414,6 +429,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            ENABLE_BACK_BUTTON = false;
             objects.clear();
             type_objects.clear();
             path_objects.clear();
@@ -443,6 +459,15 @@ public class MainActivity extends AppCompatActivity {
                         type_objects.add(jData.getJSONObject(i).getInt("type_object"));
                         path_objects.add(jData.getJSONObject(i).getString("path_object"));
                     }
+
+
+
+                    Log.d("123123123--------", objects.toString());
+                    Log.d("123123123--------", type_objects.toString());
+                    Log.d("123123123--------", size_objects.toString());
+                    Log.d("123123123--------", date_objects.toString());
+                    Log.d("123123123--------", numbs_objects.toString());
+                    Log.d("123123123--------", path_objects.toString());
                     return "1";
                 }else{
                     return "0";
@@ -477,26 +502,26 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int i = 0; i < objects.size(); i++) {
                     if (type_objects.get(i) == 1) {
-                        ConstraintLayout ll_object = (ConstraintLayout) View.inflate(MainActivity.this, R.layout.ll_object, null);
+                        ConstraintLayout ll_object = (ConstraintLayout) View.inflate(MainActivity.this, R.layout.ll_object_found, null);
                         ImageView iv_icon_object = ll_object.findViewById(R.id.iv_icon_object);
                         iv_icon_object.setImageResource(R.drawable.ic_folder);
                         ImageView iv_icon_action = ll_object.findViewById(R.id.iv_icon_action);
                         iv_icon_action.setImageResource(R.drawable.ic_more);
                         TextView tv_name_object = ll_object.findViewById(R.id.tv_name_object);
                         tv_name_object.setText(objects.get(i));
-                        TextView tv_date_object = ll_object.findViewById(R.id.tv_date_object);
-                        tv_date_object.setText("Lokalizacja: " + path_objects.get(i));
+                        TextView tv_path_object = ll_object.findViewById(R.id.tv_path_object);
+                        tv_path_object.setText("Lokalizacja: " + path_objects.get(i));
                         ll_main.addView(ll_object);
                     }else{
-                        ConstraintLayout ll_object = (ConstraintLayout) View.inflate(MainActivity.this, R.layout.ll_object, null);
+                        ConstraintLayout ll_object = (ConstraintLayout) View.inflate(MainActivity.this, R.layout.ll_object_found, null);
                         ImageView iv_icon_object = ll_object.findViewById(R.id.iv_icon_object);
                         iv_icon_object.setImageResource(R.drawable.ic_file);
                         ImageView iv_icon_action = ll_object.findViewById(R.id.iv_icon_action);
                         iv_icon_action.setImageResource(R.drawable.ic_more);
                         TextView tv_name_object = ll_object.findViewById(R.id.tv_name_object);
                         tv_name_object.setText(objects.get(i));
-                        TextView tv_date_object = ll_object.findViewById(R.id.tv_date_object);
-                        tv_date_object.setText("Lokalizacja: " + path_objects.get(i));
+                        TextView tv_path_object = ll_object.findViewById(R.id.tv_path_object);
+                        tv_path_object.setText("Lokalizacja: " + path_objects.get(i));
                         ll_main.addView(ll_object);
                     }
                 }
@@ -542,6 +567,8 @@ public class MainActivity extends AppCompatActivity {
                 STATUS_SEARCH = true;
                 new SearchObjectListing().execute();
             }
+
+            ENABLE_BACK_BUTTON = true;
 
         }
     }
@@ -612,33 +639,32 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(!SEARCH_ACTIVE){
-            if(!PATH.equals("/")){
-                String [] path = PATH.split("/");
-                PATH = TextUtils.join("/", Arrays.copyOf(path, path.length-1))+"/";
-                if(PATH.equals("/")){
-                    tv_search.setVisibility(View.VISIBLE);
-                    tv_root.setVisibility(View.GONE);
+        if(ENABLE_BACK_BUTTON){
+            if(!SEARCH_ACTIVE){
+                if(!PATH.equals("/")){
+                    String [] path = PATH.split("/");
+                    PATH = TextUtils.join("/", Arrays.copyOf(path, path.length-1))+"/";
+                    if(PATH.equals("/")){
+                        cl_main.setVisibility(View.VISIBLE);
+                        cl_more.setVisibility(View.GONE);
+                    }else{
+                        cl_more.setVisibility(View.VISIBLE);
+                        cl_main.setVisibility(View.GONE);
+                        tv_root.setText(path[path.length-2]);
+                    }
+                    cl_search.setVisibility(View.GONE);
+                    new ObjectsListing().execute();
                 }else{
-                    tv_search.setVisibility(View.GONE);
-                    tv_root.setVisibility(View.VISIBLE);
-                    tv_root.setText(path[path.length-2]);
+                    this.finishAffinity();
                 }
-                new ObjectsListing().execute();
             }else{
-                this.finishAffinity();
+                SEARCH_ACTIVE = false;
+                cl_main.setVisibility(View.VISIBLE);
+                cl_more.setVisibility(View.GONE);
+                cl_search.setVisibility(View.GONE);
+                PATH = "/";
+                new ObjectsListing().execute();
             }
-        }else{
-            SEARCH_ACTIVE = false;
-            tv_search.setVisibility(View.VISIBLE);
-            tv_root.setVisibility(View.VISIBLE);
-            iv_refresh.setVisibility(View.VISIBLE);
-            et_search.setVisibility(View.GONE);
-            iv_close.setVisibility(View.GONE);
-            tv_root.setVisibility(View.GONE);
-            PATH = "/";
-            new ObjectsListing().execute();
-
         }
     }
 
@@ -672,12 +698,10 @@ public class MainActivity extends AppCompatActivity {
 
     View.OnClickListener f_search = new View.OnClickListener() {
         public void onClick(View v) {
-            et_search.setVisibility(View.VISIBLE);
-            iv_close.setVisibility(View.VISIBLE);
-            tv_search.setVisibility(View.GONE);
-            tv_root.setVisibility(View.GONE);
-            iv_refresh.setVisibility(View.GONE);
-            tv_root.setVisibility(View.GONE);
+            et_search.setText("");
+            cl_search.setVisibility(View.VISIBLE);
+            cl_main.setVisibility(View.GONE);
+            cl_more.setVisibility(View.GONE);
             ll_main.removeAllViews();
             SEARCH_ACTIVE = true;
         }
@@ -685,15 +709,34 @@ public class MainActivity extends AppCompatActivity {
 
     View.OnClickListener f_close_search = new View.OnClickListener() {
         public void onClick(View v) {
-            tv_search.setVisibility(View.VISIBLE);
-            tv_root.setVisibility(View.VISIBLE);
-            iv_refresh.setVisibility(View.VISIBLE);
-            et_search.setVisibility(View.GONE);
-            iv_close.setVisibility(View.GONE);
-            tv_root.setVisibility(View.GONE);
+            cl_main.setVisibility(View.VISIBLE);
+            cl_search.setVisibility(View.GONE);
+            cl_more.setVisibility(View.GONE);
             PATH = "/";
             SEARCH_ACTIVE = false;
             new ObjectsListing().execute();
+        }
+    };
+
+
+    View.OnClickListener f_back = new View.OnClickListener() {
+        public void onClick(View v) {
+            if(ENABLE_BACK_BUTTON){
+                if(!PATH.equals("/")){
+                    String [] path = PATH.split("/");
+                    PATH = TextUtils.join("/", Arrays.copyOf(path, path.length-1))+"/";
+                    if(PATH.equals("/")){
+                        cl_main.setVisibility(View.VISIBLE);
+                        cl_more.setVisibility(View.GONE);
+                    }else{
+                        cl_more.setVisibility(View.VISIBLE);
+                        cl_main.setVisibility(View.GONE);
+                        tv_root.setText(path[path.length-2]);
+                    }
+                    cl_search.setVisibility(View.GONE);
+                    new ObjectsListing().execute();
+                }
+            }
         }
     };
 

@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
             super.onPreExecute();
             ENABLE_BACK_BUTTON = false;
             iv_refresh.setEnabled(false);
+            iv_refresh_more.setEnabled(false);
             tv_search.setEnabled(false);
             ll_main.removeAllViews();
             pb_global.setVisibility(View.VISIBLE);
@@ -158,12 +159,6 @@ public class MainActivity extends AppCompatActivity {
                     return "5";
                 }
 
-
-                Log.d("123123123", objects.toString());
-                Log.d("123123123", type_objects.toString());
-                Log.d("123123123", size_objects.toString());
-                Log.d("123123123", date_objects.toString());
-                Log.d("123123123", numbs_objects.toString());
                 JSONObject jA = new JSONObject(response.body().string());
                 JSONArray jData = new JSONArray(jA.get("data").toString());
 
@@ -175,12 +170,6 @@ public class MainActivity extends AppCompatActivity {
                         date_objects.add(jData.getJSONObject(i).getString("date_object"));
                         numbs_objects.add(jData.getJSONObject(i).getInt("numb_of_objects"));
                     }
-
-                    Log.d("123123123", objects.toString());
-                    Log.d("123123123", type_objects.toString());
-                    Log.d("123123123", size_objects.toString());
-                    Log.d("123123123", date_objects.toString());
-                    Log.d("123123123", numbs_objects.toString());
                     return "1";
                 }else{
                     return "0";
@@ -202,10 +191,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            Log.d("result--", result);
-            Log.d("result--", objects.size() +"");
-
-
             ll_no_objects.setVisibility(View.GONE);
             if(result.equals("1")){
                 for (int i = 0; i < objects.size(); i++) {
@@ -396,6 +381,7 @@ public class MainActivity extends AppCompatActivity {
             ll_global.setVisibility(View.VISIBLE);
             pb_global.setVisibility(View.GONE);
             iv_refresh.setEnabled(true);
+            iv_refresh_more.setEnabled(true);
             tv_search.setEnabled(true);
             ENABLE_BACK_BUTTON = true;
 

@@ -68,7 +68,8 @@
                     android:layout_marginTop="5dp"
                     app:layout_constraintBottom_toBottomOf="@+id/textView3"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"></LinearLayout>
+                    app:layout_constraintStart_toStartOf="parent"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ScrollView
@@ -88,7 +89,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="More actions"
+                        android:text="@string/drawer_title_more_action"
                         android:textColor="@color/colorWhite2" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -102,6 +103,7 @@
                             android:layout_height="wrap_content"
                             android:padding="15dp"
                             android:paddingStart="25dp"
+                            android:paddingEnd="15dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -113,7 +115,8 @@
                             android:layout_height="wrap_content"
                             android:padding="10dp"
                             android:paddingStart="0dp"
-                            android:text="Recent"
+                            android:paddingEnd="10dp"
+                            android:text="@string/drawer_action_recent"
                             android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -145,7 +148,7 @@
                             android:padding="10dp"
                             android:paddingStart="0dp"
                             android:paddingEnd="0dp"
-                            android:text="Bin"
+                            android:text="@string/drawer_action_bin"
                             android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -164,6 +167,7 @@
                             android:layout_height="wrap_content"
                             android:padding="15dp"
                             android:paddingStart="25dp"
+                            android:paddingEnd="15dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
@@ -176,7 +180,7 @@
                             android:padding="10dp"
                             android:paddingStart="0dp"
                             android:paddingEnd="0dp"
-                            android:text="Backup"
+                            android:text="@string/drawer_action_backup"
                             android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -208,7 +212,7 @@
                             android:padding="10dp"
                             android:paddingStart="0dp"
                             android:paddingEnd="0dp"
-                            android:text="History"
+                            android:text="@string/drawer_action_history"
                             android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -234,10 +238,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Settings"
+                        android:text="@string/drawer_title_settings"
                         android:textColor="@color/colorWhite2" />
-
-
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -249,7 +251,8 @@
                             android:layout_height="wrap_content"
                             android:padding="10dp"
                             android:paddingStart="15dp"
-                            android:text="Language:"
+                            android:paddingEnd="10dp"
+                            android:text="@string/drawer_language"
                             android:textColor="@color/colorWhite"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -267,7 +270,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="10dp"
-                                android:text="PL"
+                                android:text="@string/drawer_language_pl"
                                 android:textColor="@color/colorWhite2"
                                 android:textSize="20sp" />
 
@@ -276,7 +279,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="10dp"
-                                android:text="EN"
+                                android:text="@string/drawer_language_en"
                                 android:textColor="@color/colorAccent"
                                 android:textColorHint="#FFFFFF"
                                 android:textSize="20sp" />
@@ -294,7 +297,7 @@
                             android:padding="10dp"
                             android:paddingStart="15dp"
                             android:paddingEnd="15dp"
-                            android:text="Theme:"
+                            android:text="@string/drawer_theme"
                             android:textColor="@color/colorWhite"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -312,7 +315,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="10dp"
-                                android:text="Light"
+                                android:text="@string/drawer_theme_light"
                                 android:textColor="@color/colorWhite2"
                                 android:textSize="20sp" />
 
@@ -321,7 +324,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:padding="10dp"
-                                android:text="Dark"
+                                android:text="@string/drawer_theme_dark"
                                 android:textColor="@color/colorAccent"
                                 android:textColorHint="#FFFFFF"
                                 android:textSize="20sp" />
@@ -339,13 +342,13 @@
                         android:layout_marginTop="5dp"
                         app:layout_constraintBottom_toBottomOf="@+id/textView3"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"></LinearLayout>
+                        app:layout_constraintStart_toStartOf="parent"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
-                        android:text="Storage"
+                        android:text="@string/drawer_title_storage"
                         android:textColor="@color/colorWhite2" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -372,22 +375,22 @@
                             app:layout_constraintTop_toTopOf="parent">
 
                             <ProgressBar
-                                android:id="@+id/progressBar"
+                                android:id="@+id/pb_storage"
                                 style="?android:attr/progressBarStyleHorizontal"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:indeterminate="false"
                                 android:max="100"
                                 android:padding="5dp"
-                                android:progress="32"
+                                android:progress="100"
                                 android:progressTint="@color/colorAccent" />
 
                             <TextView
-                                android:id="@+id/textView10"
+                                android:id="@+id/tv_storage"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:padding="5dp"
-                                android:text="125.7 MB of 65.7 GB used (100% full)"
+                                android:text="@string/drawer_title_storage_value"
                                 android:textAlignment="center"
                                 android:textColor="@color/colorWhite"
                                 android:textSize="12sp" />

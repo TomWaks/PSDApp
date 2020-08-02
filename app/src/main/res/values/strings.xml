@@ -22,7 +22,30 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="main_search_hint">Let\'s type ...</string>
+    <string name="main_search_button">Search ...</string>
+    <string name="main_no_objects">No files found</string>
+    <string name="drawer_title_more_action">More action</string>
+    <string name="drawer_action_recent">Recent</string>
+    <string name="drawer_action_bin">Bin</string>
+    <string name="drawer_action_backup">Backup</string>
+    <string name="drawer_action_history">History</string>
+    <string name="drawer_title_settings">Settings</string>
+    <string name="drawer_language">Language</string>
+    <string name="drawer_language_pl">PL</string>
+    <string name="drawer_language_en">EN</string>
+    <string name="drawer_theme">Theme</string>
+    <string name="drawer_theme_light">Light</string>
+    <string name="drawer_theme_dark">Dark</string>
+    <string name="drawer_title_storage">Storage</string>
+    <string name="drawer_title_storage_value">Loading data ...</string>
+
+
+    <string name="popup_file_rename">Rename</string>
+    <string name="popup_file_share">Share</string>
+    <string name="popup_file_move">Move</string>
+    <string name="popup_file_download">Download</string>
+    <string name="popup_file_details">Details</string>
+    <string name="popup_file_remove">Remove</string>
+
 </resources>

@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="10dp"
-                    android:text="Szukaj..."
+                    android:text="@string/main_search_button"
                     android:textColor="@color/colorWhite2"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -67,15 +67,16 @@
 
                 <TextView
                     android:id="@+id/tv_root"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:padding="10dp"
-                    android:text="123"
                     android:textColor="@color/colorWhite2"
                     android:textSize="16sp"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_refresh"
                     app:layout_constraintStart_toEndOf="@+id/iv_nav"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -84,12 +85,12 @@
                     android:id="@+id/et_search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:hint="Zacznij pisać ..."
                     android:background="@drawable/et_style_border"
+                    android:hint="@string/main_search_hint"
                     android:padding="10dp"
                     android:textColor="@color/colorWhite"
                     android:textColorHint="@color/colorWhite2"
+                    android:textSize="16sp"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/iv_nav"
@@ -138,6 +139,34 @@
                 </LinearLayout>
             </ScrollView>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_no_objects"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                app:srcCompat="@drawable/ic_no_objects" />
+
+            <TextView
+                android:id="@+id/tv_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="TextView"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
